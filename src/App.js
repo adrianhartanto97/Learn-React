@@ -1,52 +1,42 @@
 import React, {Component} from 'react';
 import './App.css';
-import UserInput from './UserInput/UserInput'
-import UserOutput from './UserOutput/UserOutput'
+import Text from './Text/Text';
+import Validation from './Validation/Validation';
+import Char from './Char/Char';
 
 class App extends Component {
   state = {
-    names: [
-      {
-        name : "Adrian",
-        age : 23
-      },
-      {
-        name : "Mustafa",
-        age : 24
-      },
-      {
-        name : "Adeline",
-        age : 24
-      },
-    ]
+    text : ''
   }
 
-  changeNameHandler = (event) => {
+  changeTextHandler = (event) => {
     this.setState({
-      names: [
-        {
-          name : event.target.value,
-          age : 23
-        },
-        {
-          name : "Mustafa",
-          age : 24
-        },
-        {
-          name : "Adeline",
-          age : 24
-        },
-      ]
+      text : event.target.value
+    })
+  }
+
+  onDeleteCharHandler = (index) => {
+    const CharArr = this.state.text.split('')
+    CharArr.splice(index,1)
+
+    this.setState({
+      text : CharArr.join('')
     })
   }
 
   render() {
     return (
       <div>
-        <UserInput changeName = {this.changeNameHandler} name = {this.state.names[0].name}/>
-        <UserOutput name = {this.state.names[0].name}/>
-        <UserOutput name = {this.state.names[1].name}/>
-        <UserOutput name = {this.state.names[2].name}/>
+        <input type="text" onChange={this.changeTextHandler} value={this.state.text}/>
+        <Text text={this.state.text}/>
+        <Validation textLength={this.state.text.length} />
+        <div>
+          {
+            this.state.text.split('').map((ch, index) => {
+              return <Char char={ch} key={index} delete={() => this.onDeleteCharHandler(index)}/>
+            })
+          }
+        </div>
       </div>  
     );
   }
